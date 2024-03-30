@@ -20,7 +20,7 @@ export type Tag = {
   is_moderator_only: boolean;
   is_required: boolean;
   name: string;
-  last_activity_date?: Date;
+  last_activity_date: Date;
   synonyms?: string[];
   user_id?: number;
 };

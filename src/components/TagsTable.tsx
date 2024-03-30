@@ -11,15 +11,8 @@ import { Tag } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import { getTagsData } from "@/services/stackexchange";
 import TagsTableRow from "@/components/TagsTableRow";
-
-// https://api.stackexchange.com/2.3/tags?page=1&order=desc&sort=popular&site=stackoverflow
-const tableStructure: { title: string; key: keyof Tag }[] = [
-  { title: "Name", key: "name" },
-  { title: "Count", key: "count" },
-  { title: "Required", key: "is_required" },
-  { title: "Moderator Only", key: "is_moderator_only" },
-  { title: "Synonyms", key: "has_synonyms" },
-];
+import TagsTableControl from "./TagsTableControl";
+import { tagTableStructure } from "@/constants/tags";
 
 const TagsTable = () => {
   const { isPending, isSuccess, error, data } = useQuery({
@@ -27,14 +20,19 @@ const TagsTable = () => {
     queryFn: () => getTagsData(),
   });
 
+  const columnAlign = (key: keyof Tag) =>
+    key === "name" || key === "count" ? "left" : "center";
   return (
     <>
+      <TagsTableControl />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 450 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              {tableStructure.map((cell) => (
-                <TableCell key={cell.title}>{cell.title}</TableCell>
+              {tagTableStructure.map((cell) => (
+                <TableCell align={columnAlign(cell.key)} key={cell.name}>
+                  {cell.name}
+                </TableCell>
               ))}
             </TableRow>
           </TableHead>
@@ -50,8 +48,11 @@ const TagsTable = () => {
                       },
                     }}
                   >
-                    {tableStructure.map((cell) => (
-                      <TableCell key={cell.key + row.name}>
+                    {tagTableStructure.map((cell) => (
+                      <TableCell
+                        align={columnAlign(cell.key)}
+                        key={cell.key + row.name}
+                      >
                         <TagsTableRow cellKey={cell.key} row={row} />
                       </TableCell>
                     ))}

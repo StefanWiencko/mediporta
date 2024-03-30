@@ -1,4 +1,6 @@
 import { Tag } from "@/types";
+import ClearIcon from "@mui/icons-material/Clear";
+import CheckIcon from "@mui/icons-material/Check";
 
 type Props = {
   cellKey: keyof Tag;
@@ -10,12 +12,11 @@ const TagsTableRow = ({ cellKey, row }: Props) => {
     return <div> {String(row[cellKey])}</div>;
   }
   if (typeof row[cellKey] === "boolean" && row[cellKey]) {
-    return <div>true xxdd</div>;
+    return <CheckIcon />;
   }
   if (typeof row[cellKey] === "boolean" && !row[cellKey]) {
-    return <div>false dd</div>;
+    return <ClearIcon />;
   }
-  //   console.log(key, row);
   return <div>No data</div>;
 };
 

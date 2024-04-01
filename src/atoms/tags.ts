@@ -1,10 +1,9 @@
-import { atom } from "jotai";
-import { withImmer } from "jotai-immer";
+import { atomWithImmer } from "jotai-immer";
 
-const primitiveTagTableControlAtom = atom({
-  count: 5,
-  sortBy: "count",
-  sortDirection: "desc",
+const tagTableControlAtom = atomWithImmer({
+  per_page: 5,
+  sort: "popular",
+  order: "desc",
 });
 
-export const tagTableControlAtom = withImmer(primitiveTagTableControlAtom);
+export { tagTableControlAtom };

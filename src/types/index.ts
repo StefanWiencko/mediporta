@@ -45,3 +45,15 @@ type CollectiveExternalLinks = {
     | "linkedin";
   link: string;
 };
+
+export type StackexchangeError = {
+  error_id: number;
+  error_message: string;
+  error_name: string;
+};
+export type GetTagsDataParams = {
+  page: number;
+  per_page: number;
+  sort: string;
+  order: string;
+};

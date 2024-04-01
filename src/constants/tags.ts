@@ -8,13 +8,13 @@ export const tagTableStructure: { name: string; key: keyof Tag }[] = [
   { name: "Synonyms", key: "has_synonyms" },
 ];
 
-export const tagSortOptions: { name: string; key: keyof Tag }[] = [
+export const tagSortOptions: { name: string; key: string }[] = [
   { name: "Name", key: "name" },
-  { name: "Popularity", key: "count" },
-  { name: "Last activity", key: "last_activity_date" },
+  { name: "Popularity", key: "popular" },
+  { name: "Last activity", key: "activity" },
 ];
 
-export const tagSortDirections: { name: string; key: string }[] = [
+export const tagOrderOptions: { name: string; key: string }[] = [
   { name: "Ascending", key: "asc" },
   { name: "Descending", key: "desc" },
 ];

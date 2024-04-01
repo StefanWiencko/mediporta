@@ -13,13 +13,31 @@ import { getTagsData } from "@/services/stackexchange";
 import TagsTableRow from "@/components/TagsTableRow";
 import TagsTableControl from "./TagsTableControl";
 import { tagTableStructure } from "@/constants/tags";
+import { useAtom } from "jotai";
+import { tagTableControlAtom } from "@/atoms/tags";
+import { ChangeEvent, useState } from "react";
 
 const TagsTable = () => {
+  const [page, setPage] = useState(1);
+  const [{ per_page, sort, order }] = useAtom(tagTableControlAtom);
+
   const { isPending, isSuccess, error, data } = useQuery({
-    queryKey: ["tags"],
-    queryFn: () => getTagsData(),
+    queryKey: ["tags", page, per_page, sort, order],
+    queryFn: () =>
+      getTagsData({
+        page,
+        per_page,
+        sort,
+        order,
+      }),
   });
 
+  const handleChange = (_: ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
+
+  const calculateTotalPages =
+    data?.total !== undefined ? Math.ceil(data?.total / per_page) : 0;
   const columnAlign = (key: keyof Tag) =>
     key === "name" || key === "count" ? "left" : "center";
   return (
@@ -61,17 +79,17 @@ const TagsTable = () => {
               : null}
             <TableRow>
               {isSuccess && !data.items?.length ? (
-                <TableCell colSpan={3} align="center">
+                <TableCell colSpan={tagTableStructure.length} align="center">
                   No data
                 </TableCell>
               ) : null}
               {isPending ? (
-                <TableCell colSpan={3} align="center">
+                <TableCell colSpan={tagTableStructure.length} align="center">
                   Loading...
                 </TableCell>
               ) : null}
               {error ? (
-                <TableCell colSpan={3} align="center">
+                <TableCell colSpan={tagTableStructure.length} align="center">
                   {"Error: " + error.message}
                 </TableCell>
               ) : null}
@@ -85,11 +103,11 @@ const TagsTable = () => {
       >
         {isSuccess ? (
           <Pagination
-            count={2}
+            count={calculateTotalPages}
             variant="outlined"
             color="primary"
-            page={1}
-            onChange={() => {}}
+            page={page}
+            onChange={handleChange}
           />
         ) : null}
       </Stack>

@@ -1,7 +1,7 @@
 import {
   tagInputsDebounceTime,
-  tagSortDirections,
-  tagTableStructure,
+  tagOrderOptions,
+  tagSortOptions,
 } from "@/constants/tags";
 import {
   Box,
@@ -15,33 +15,32 @@ import {
 import _ from "lodash";
 import { useAtom } from "jotai";
 import { tagTableControlAtom } from "@/atoms/tags";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 const TagsTableControl = () => {
   const [options, setOptions] = useAtom(tagTableControlAtom);
-  const [count, setCount] = useState(options.count);
+  const [perPage, setPerPage] = useState(options.per_page);
 
   useEffect(() => {
     const cb = () =>
       setOptions((draft) => {
-        draft.count = count;
+        draft.per_page = perPage;
       });
 
     _.debounce(cb, tagInputsDebounceTime)();
-  }, [count, setOptions]);
+  }, [perPage, setOptions]);
 
   const handleNumberChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const value = parseInt(e.target.value);
     if (_.inRange(value, 1, 101)) {
-      setCount(value);
+      setPerPage(value);
     }
   };
 
   const handleSelectChange =
-    (property: "sortBy" | "sortDirection") =>
-    (e: SelectChangeEvent<string>) => {
+    (property: "sort" | "order") => (e: SelectChangeEvent<string>) => {
       const cb = () =>
         setOptions((draft) => {
           draft[property] = e.target.value;
@@ -52,7 +51,7 @@ const TagsTableControl = () => {
   return (
     <div className="flex gap-6 mb-6">
       <TextField
-        value={count}
+        value={perPage}
         type="number"
         sx={{ maxWidth: 120, background: "white" }}
         onKeyDown={(e) => {
@@ -74,11 +73,11 @@ const TagsTableControl = () => {
           <Select
             labelId="sort-by-select-label"
             id="sort-by-select"
-            value={options.sortBy}
+            value={options.sort}
             label="Sort by"
-            onChange={handleSelectChange("sortBy")}
+            onChange={handleSelectChange("sort")}
           >
-            {tagTableStructure.map((col) => (
+            {tagSortOptions.map((col) => (
               <MenuItem key={col.key} value={col.key}>
                 {col.name}
               </MenuItem>
@@ -93,11 +92,11 @@ const TagsTableControl = () => {
           <Select
             labelId="sort-direction-select-label"
             id="sort-direction-select"
-            value={options.sortDirection}
+            value={options.order}
             label="Sort direction"
-            onChange={handleSelectChange("sortDirection")}
+            onChange={handleSelectChange("order")}
           >
-            {tagSortDirections.map((col) => (
+            {tagOrderOptions.map((col) => (
               <MenuItem key={col.key} value={col.key}>
                 {col.name}
               </MenuItem>

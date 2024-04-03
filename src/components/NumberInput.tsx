@@ -1,5 +1,5 @@
-import { TextField } from "@mui/material";
-import { ChangeEvent } from "react";
+import TextField from "@mui/material/TextField";
+import { HandleNumberChange } from "@/types";
 
 type Props = {
   value: number;
@@ -8,14 +8,11 @@ type Props = {
 };
 
 type HandleKeyDown = (a: React.KeyboardEvent<HTMLDivElement>) => void;
-type HandleNumberChange = (
-  a: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-) => void;
+
+const excludedCharacters = ["e", "E", "-", "+"];
 
 const NumberInput = ({ changeHandler, value, backgroundColor }: Props) => {
   const handleKeyDown: HandleKeyDown = (e) => {
-    const excludedCharacters = ["e", "E", "-", "+"];
-
     if (excludedCharacters.includes(e.key)) {
       e.preventDefault();
     }

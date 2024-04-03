@@ -1,3 +1,5 @@
+import { ChangeEvent } from "react";
+
 export type TagsResponse = {
   backoff?: number;
   error_id?: number;
@@ -65,3 +67,12 @@ export type TableAlign =
   | "center"
   | "justify"
   | undefined;
+
+export type BasicTableData = {
+  name: string;
+  [key: string]: unknown;
+};
+
+export type HandleNumberChange = (
+  a: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+) => void;

@@ -1,12 +1,13 @@
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckIcon from "@mui/icons-material/Check";
+import { BasicTableData } from "@/types";
 
-type Props<T> = {
-  cellKey: keyof T;
-  row: T;
+type Props = {
+  cellKey: keyof BasicTableData;
+  row: BasicTableData;
 };
 
-const BasicTableRow = <T,>({ cellKey, row }: Props<T>) => {
+const BasicTableRow = ({ cellKey, row }: Props) => {
   switch (typeof row[cellKey]) {
     case "string":
     case "number":

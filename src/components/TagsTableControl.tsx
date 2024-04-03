@@ -1,14 +1,11 @@
 import { useAtom } from "jotai";
 import _ from "lodash";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { SelectChangeEvent } from "@mui/material";
 import { tagTableControlAtom } from "@/atoms/tags";
+import { HandleNumberChange } from "@/types";
 import Select from "@/components/Select";
 import NumberInput from "@/components/NumberInput";
-
-type HandleNumberChange = (
-  a: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-) => void;
 
 const debounceTimeout = 500;
 

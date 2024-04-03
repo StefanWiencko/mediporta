@@ -1,10 +1,10 @@
 import BasicTable from "@/components/BasicTable";
-import { Tag } from "@/types";
+import { BasicTableData, TableAlign, Tag, TagsResponse } from "@/types";
 import { tagsData } from "./assets/tagsData";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "UI/NumberInputs",
+  title: "UI/BasicTable",
   component: BasicTable,
   tags: ["autodocs"],
   parameters: {
@@ -15,7 +15,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const columnAlign = (key: keyof Tag) =>
+const columnAlign = (key: keyof BasicTableData): TableAlign =>
   key === "name" || key === "count" ? "left" : "center";
 const tableStructure: { name: string; key: keyof Tag }[] = [
   { name: "Name", key: "name" },
@@ -25,14 +25,21 @@ const tableStructure: { name: string; key: keyof Tag }[] = [
   { name: "Synonyms", key: "has_synonyms" },
 ];
 
+const paginateData = (
+  page: number,
+  perPage: number,
+  tagsData: TagsResponse
+) => {
+  const startIndex = (page - 1) * perPage;
+  const endIndex = startIndex + perPage;
+  return tagsData.items.slice(startIndex, endIndex);
+};
+
 export const Default: Story = {
   render: function Component(args) {
     const useTableData = (page: number) => {
-      const startIndex = (page - 1) * args.perPage;
-      const endIndex = startIndex + args.perPage;
-      const paginatedData = tagsData.items.slice(startIndex, endIndex);
       return {
-        data: paginatedData,
+        data: paginateData(page, args.perPage, tagsData),
         error: null,
         isSuccess: true,
         isPending: false,
@@ -42,17 +49,10 @@ export const Default: Story = {
             : 0,
       };
     };
-    return (
-      <BasicTable<Tag>
-        {...args}
-        tableStructure={tableStructure}
-        query={useTableData}
-        columnAlign={columnAlign}
-      />
-    );
+    return <BasicTable {...args} query={useTableData} />;
   },
   args: {
-    tableStructure: [{ name: "Name", key: "name" }],
+    tableStructure: tableStructure,
     perPage: 5,
     minWidth: 450,
     columnAlign: columnAlign,
@@ -69,11 +69,8 @@ export const Default: Story = {
 export const Loading: Story = {
   render: function Component(args) {
     const useTableData = (page: number) => {
-      const startIndex = (page - 1) * args.perPage;
-      const endIndex = startIndex + args.perPage;
-      const paginatedData = tagsData.items.slice(startIndex, endIndex);
       return {
-        data: paginatedData,
+        data: paginateData(page, args.perPage, tagsData),
         error: null,
         isSuccess: false,
         isPending: true,
@@ -83,65 +80,28 @@ export const Loading: Story = {
             : 0,
       };
     };
-    return (
-      <BasicTable<Tag>
-        {...args}
-        tableStructure={tableStructure}
-        query={useTableData}
-        columnAlign={columnAlign}
-      />
-    );
+    return <BasicTable {...args} query={useTableData} />;
   },
   args: {
-    tableStructure: [{ name: "Name", key: "name" }],
-    perPage: 5,
-    minWidth: 450,
-    columnAlign: columnAlign,
-    query: () => ({
-      data: [],
-      error: null,
-      isSuccess: false,
-      isPending: true,
-      totalPages: 0,
-    }),
+    ...Default.args,
   },
 };
 
 export const Error: Story = {
   render: function Component(args) {
     const useTableData = (page: number) => {
-      const startIndex = (page - 1) * args.perPage;
-      const endIndex = startIndex + args.perPage;
-      const paginatedData = tagsData.items.slice(startIndex, endIndex);
       return {
-        data: paginatedData,
-        error: { message: "Test client error 404 : request failed" } as Error,
+        data: paginateData(page, args.perPage, tagsData),
+        error: { message: "Test client error 404: request failed" } as Error,
         isSuccess: false,
         isPending: false,
         totalPages: 0,
       };
     };
-    return (
-      <BasicTable<Tag>
-        {...args}
-        tableStructure={tableStructure}
-        query={useTableData}
-        columnAlign={columnAlign}
-      />
-    );
+    return <BasicTable {...args} query={useTableData} />;
   },
   args: {
-    tableStructure: [{ name: "Name", key: "name" }],
-    perPage: 5,
-    minWidth: 450,
-    columnAlign: columnAlign,
-    query: () => ({
-      data: [],
-      error: null,
-      isSuccess: false,
-      isPending: true,
-      totalPages: 0,
-    }),
+    ...Default.args,
   },
 };
 
@@ -156,26 +116,9 @@ export const NoData: Story = {
         totalPages: 0,
       };
     };
-    return (
-      <BasicTable<Tag>
-        {...args}
-        tableStructure={tableStructure}
-        query={useTableData}
-        columnAlign={columnAlign}
-      />
-    );
+    return <BasicTable {...args} query={useTableData} />;
   },
   args: {
-    tableStructure: [{ name: "Name", key: "name" }],
-    perPage: 5,
-    minWidth: 450,
-    columnAlign: columnAlign,
-    query: () => ({
-      data: [],
-      error: null,
-      isSuccess: false,
-      isPending: true,
-      totalPages: 0,
-    }),
+    ...Default.args,
   },
 };

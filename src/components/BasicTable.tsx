@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -7,17 +8,12 @@ import TableRow from "@mui/material/TableRow";
 import BasicTableRow from "@/components/BasicTableRow";
 import Paper from "@mui/material/Paper";
 import Pagination from "@mui/material/Pagination";
-import { useState } from "react";
-import { TableAlign } from "@/types";
-import { Stack } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import { BasicTableData, TableAlign } from "@/types";
 
-type RequiredProperties = {
-  name: string;
-};
-
-type Props<T> = {
+type Props = {
   query: (page: number) => {
-    data: T[] | undefined;
+    data: BasicTableData[] | undefined;
     error: Error | null;
     isSuccess: boolean;
     isPending: boolean;
@@ -25,16 +21,16 @@ type Props<T> = {
   };
   minWidth: number;
   perPage: number;
-  columnAlign: (key: keyof T) => TableAlign;
-  tableStructure: { name: string; key: keyof T }[];
+  columnAlign: (key: keyof BasicTableData) => TableAlign;
+  tableStructure: { name: string; key: keyof BasicTableData }[];
 };
 
-const BasicTable = <T extends RequiredProperties>({
+const BasicTable = ({
   query,
   columnAlign,
   tableStructure,
   minWidth,
-}: Props<T>) => {
+}: Props) => {
   const [page, setPage] = useState(1);
 
   const { isPending, isSuccess, error, data, totalPages } = query(page);
@@ -45,7 +41,7 @@ const BasicTable = <T extends RequiredProperties>({
   return (
     <>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth }} aria-label="simple table">
+        <Table sx={{ minWidth }} aria-label="basicTable">
           <TableHead>
             <TableRow>
               {tableStructure.map((cell) => (

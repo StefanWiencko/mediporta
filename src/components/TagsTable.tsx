@@ -1,9 +1,9 @@
-import { Tag } from "@/types";
+import { useAtom } from "jotai";
 import { useQuery } from "@tanstack/react-query";
 import { getTagsData } from "@/services/stackexchange";
-import TagsTableControl from "./TagsTableControl";
-import { useAtom } from "jotai";
 import { tagTableControlAtom } from "@/atoms/tags";
+import { BasicTableData, Tag } from "@/types";
+import TagsTableControl from "@/components/TagsTableControl";
 import BasicTable from "@/components/BasicTable";
 
 const tableStructure: { name: string; key: keyof Tag }[] = [
@@ -39,12 +39,12 @@ const TagsTable = () => {
     };
   };
 
-  const columnAlign = (key: keyof Tag) =>
+  const columnAlign = (key: keyof BasicTableData) =>
     key === "name" || key === "count" ? "left" : "center";
   return (
     <>
       <TagsTableControl />
-      <BasicTable<Tag>
+      <BasicTable
         query={useTagsData}
         perPage={perPage}
         columnAlign={columnAlign}

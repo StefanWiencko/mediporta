@@ -20,7 +20,7 @@ export type Tag = {
   is_moderator_only: boolean;
   is_required: boolean;
   name: string;
-  last_activity_date: Date;
+  last_activity_date: number;
   synonyms?: string[];
   user_id?: number;
 };
@@ -57,3 +57,11 @@ export type GetTagsDataParams = {
   sort: string;
   order: string;
 };
+
+export type TableAlign =
+  | "inherit"
+  | "left"
+  | "right"
+  | "center"
+  | "justify"
+  | undefined;

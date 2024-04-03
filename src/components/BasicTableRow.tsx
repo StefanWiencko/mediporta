@@ -1,13 +1,12 @@
-import { Tag } from "@/types";
 import ClearIcon from "@mui/icons-material/Clear";
 import CheckIcon from "@mui/icons-material/Check";
 
-type Props = {
-  cellKey: keyof Tag;
-  row: Tag;
+type Props<T> = {
+  cellKey: keyof T;
+  row: T;
 };
 
-const TagsTableRow = ({ cellKey, row }: Props) => {
+const BasicTableRow = <T,>({ cellKey, row }: Props<T>) => {
   switch (typeof row[cellKey]) {
     case "string":
     case "number":
@@ -19,4 +18,4 @@ const TagsTableRow = ({ cellKey, row }: Props) => {
   }
 };
 
-export default TagsTableRow;
+export default BasicTableRow;

@@ -1,7 +1,7 @@
 import { GetTagsDataParams, StackexchangeError, TagsResponse } from "@/types";
 import { capitalize } from "lodash";
 
-const API_MAIN_URL = "https://api.stackexchange.com/";
+const API_MAIN_URL = "https://api.stackexchange.com/2.3/";
 
 export const getTagsData = async ({
   page,
@@ -11,7 +11,7 @@ export const getTagsData = async ({
 }: GetTagsDataParams): Promise<TagsResponse> => {
   const getTagsUrl =
     API_MAIN_URL +
-    `2.3/tags?page=${page}&pagesize=${perPage}&order=${order}&sort=${sort}&site=stackoverflow&filter=!6WPIommj3QX9_`;
+    `tags?page=${page}&pagesize=${perPage}&order=${order}&sort=${sort}&site=stackoverflow&filter=!6WPIommj3QX9_`;
 
   const response = await fetch(getTagsUrl);
 

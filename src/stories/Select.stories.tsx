@@ -37,6 +37,6 @@ export const Default: Story = {
     label: "Test",
     minWidth: 120,
     options: tagSortOptions,
-    changeHandler: (e: SelectChangeEvent<string>) => {},
+    changeHandler: () => {},
   },
 };

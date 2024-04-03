@@ -29,9 +29,7 @@ export const Default: Story = {
   },
   args: {
     backgroundColor: "white",
-    changeHandler: (
-      e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-    ) => {},
+    changeHandler: () => {},
     value: 5,
   },
 };

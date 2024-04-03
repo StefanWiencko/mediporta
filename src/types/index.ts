@@ -53,7 +53,7 @@ export type StackexchangeError = {
 };
 export type GetTagsDataParams = {
   page: number;
-  per_page: number;
+  perPage: number;
   sort: string;
   order: string;
 };

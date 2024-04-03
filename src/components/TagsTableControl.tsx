@@ -1,38 +1,42 @@
-import {
-  tagInputsDebounceTime,
-  tagOrderOptions,
-  tagSortOptions,
-} from "@/constants/tags";
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  TextField,
-} from "@mui/material";
-import _ from "lodash";
 import { useAtom } from "jotai";
-import { tagTableControlAtom } from "@/atoms/tags";
+import _ from "lodash";
 import { ChangeEvent, useEffect, useState } from "react";
+import { SelectChangeEvent } from "@mui/material";
+import { tagTableControlAtom } from "@/atoms/tags";
+import Select from "@/components/Select";
+import NumberInput from "@/components/NumberInput";
+
+type HandleNumberChange = (
+  a: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+) => void;
+
+const debounceTimeout = 500;
+
+const orderOptions: { name: string; key: string }[] = [
+  { name: "Ascending", key: "asc" },
+  { name: "Descending", key: "desc" },
+];
+
+const sortOptions: { name: string; key: string }[] = [
+  { name: "Name", key: "name" },
+  { name: "Popularity", key: "popular" },
+  { name: "Last activity", key: "activity" },
+];
 
 const TagsTableControl = () => {
   const [options, setOptions] = useAtom(tagTableControlAtom);
-  const [perPage, setPerPage] = useState(options.per_page);
+  const [perPage, setPerPage] = useState(options.perPage);
 
   useEffect(() => {
     const cb = () =>
       setOptions((draft) => {
-        draft.per_page = perPage;
+        draft.perPage = perPage;
       });
 
-    _.debounce(cb, tagInputsDebounceTime)();
+    _.debounce(cb, debounceTimeout)();
   }, [perPage, setOptions]);
 
-  const handleNumberChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleNumberChange: HandleNumberChange = (e) => {
     const value = parseInt(e.target.value);
     if (_.inRange(value, 1, 101)) {
       setPerPage(value);
@@ -46,64 +50,33 @@ const TagsTableControl = () => {
           draft[property] = e.target.value;
         });
 
-      _.debounce(cb, tagInputsDebounceTime)();
+      _.debounce(cb, debounceTimeout)();
     };
+
   return (
     <div className="flex gap-6 mb-6">
-      <TextField
+      <NumberInput
+        backgroundColor="white"
         value={perPage}
-        type="number"
-        sx={{ maxWidth: 120, background: "white" }}
-        onKeyDown={(e) => {
-          if (
-            e.key === "e" ||
-            e.key === "E" ||
-            e.key === "-" ||
-            e.key === "+"
-          ) {
-            e.preventDefault();
-          }
-        }}
-        onChange={handleNumberChange}
+        changeHandler={handleNumberChange}
       />
 
-      <Box sx={{ minWidth: 120, background: "white" }}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Sort by</InputLabel>
-          <Select
-            labelId="sort-by-select-label"
-            id="sort-by-select"
-            value={options.sort}
-            label="Sort by"
-            onChange={handleSelectChange("sort")}
-          >
-            {tagSortOptions.map((col) => (
-              <MenuItem key={col.key} value={col.key}>
-                {col.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
-
-      <Box sx={{ minWidth: 160, background: "white" }}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Sort direction</InputLabel>
-          <Select
-            labelId="sort-direction-select-label"
-            id="sort-direction-select"
-            value={options.order}
-            label="Sort direction"
-            onChange={handleSelectChange("order")}
-          >
-            {tagOrderOptions.map((col) => (
-              <MenuItem key={col.key} value={col.key}>
-                {col.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
+      <Select
+        options={sortOptions}
+        minWidth={120}
+        changeHandler={handleSelectChange("sort")}
+        value={options.sort}
+        backgroundColor="white"
+        label="Sort by"
+      />
+      <Select
+        options={orderOptions}
+        minWidth={160}
+        changeHandler={handleSelectChange("order")}
+        value={options.order}
+        backgroundColor="white"
+        label="Sort direction"
+      />
     </div>
   );
 };

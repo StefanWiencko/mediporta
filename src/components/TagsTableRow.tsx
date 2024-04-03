@@ -8,16 +8,15 @@ type Props = {
 };
 
 const TagsTableRow = ({ cellKey, row }: Props) => {
-  if (typeof row[cellKey] === "string" || typeof row[cellKey] === "number") {
-    return <div> {String(row[cellKey])}</div>;
+  switch (typeof row[cellKey]) {
+    case "string":
+    case "number":
+      return <div> {String(row[cellKey])}</div>;
+    case "boolean":
+      return row[cellKey] ? <CheckIcon /> : <ClearIcon />;
+    default:
+      return <div>No data</div>;
   }
-  if (typeof row[cellKey] === "boolean" && row[cellKey]) {
-    return <CheckIcon />;
-  }
-  if (typeof row[cellKey] === "boolean" && !row[cellKey]) {
-    return <ClearIcon />;
-  }
-  return <div>No data</div>;
 };
 
 export default TagsTableRow;
